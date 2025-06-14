@@ -7,15 +7,22 @@ namespace cont {
 * @brief Circular Queue
 * @author Spencer Banasik
 * @details A stack allocated, iteratorless circular queue.
+* This circular queue chooses to keep track of the start and the end,
+* with both pointing to real elements. This means that the queue must always
+* have one element to start.
+* 
+* @invariant There will always be at least one element in the queue
 */
 template<typename T, size_t S>
 class CircularQueue {
 public:
 
+    // TODO: constructor
+
     /**
     * @brief Back
     * @author Spencer Banasik
-    * @returns A reference to the first element in the circular queue
+    * @returns A reference to the first element in the circular queue.
     */
     T& front() {
         return my_data[start];
@@ -24,7 +31,7 @@ public:
     /**
     * @brief Back
     * @author Spencer Banasik
-    * @returns A reference to the last element in the circular queue
+    * @returns A reference to the last element in the circular queue.
     */
     T& back() {
         return my_data[end];
@@ -37,11 +44,23 @@ public:
     * and R be return value.
     * (C + S + I) % C = R
     * (8 + 2 + 4) % 8 = 6
-    * @param [in] idx - The index
-    * @returns A reference to the element at that index
+    * @param [in] idx - The index.
+    * @returns A reference to the element at that index.
     */
     T& at(size_t idx) {
         return my_data[(S + start + idx) % S]
+    }
+
+    /**
+    * @brief Set
+    * @author Spencer Banasik
+    * @details Arbitrarily set an element of the queue
+    * @param [in] elem - The element set
+    * @param [in] idx - The index of the element to be set
+    * @returns Void
+    */
+    void set(T& elem, size_t idx) {
+        my_data[(S + start + idx) % s] = elem;
     }
 
     /**
@@ -51,8 +70,8 @@ public:
     * and R be return value.
     * (C + S + I) % C = R
     * (8 + 2 + 4) % 8 = 6
-    * @param [in] idx - The index
-    * @returns A reference to the element at that index
+    * @param [in] idx - The index.
+    * @returns A reference to the element at that index.
     */
     T& operator[](size_t idx){
         return my_data[(S + start + idx) % S]
@@ -75,34 +94,83 @@ public:
     }
 
     /**
-    * @brief Empty
+    * @brief Push to front
     * @author Spencer Banasik
-    * @returns Whether the circular queue is empty or not.
+    * @details Pushes an element to the front of the queue,
+    * moving the queue start back by one. Overwrites an element
+    * if one was where the pushed element will be.
+    * @param [in] elem - The element to be pushed.
+    * @returns A reference to the pushed element.
     */
-    bool empty() {
-        return start == end;
+    T& push_front(T& elem) {
+        start = circular_decrement(start);
+        my_data[start] = elem;
+
+        if (end == start)
+            end = circular_decrement(end);
+
+        return my_data[start];
     }
 
-    T& push_front() {
+    /**
+    * @brief Push to back
+    * @author Spencer Banasik
+    * @details Pushes an element to the back of the queue,
+    * moving the queue end forward by one. Overwrites an element
+    * if one was where the pushed element will be.
+    * @param [in] elem - The element to be pushed.
+    * @returns A reference to the pushed element.
+    */
+    T& push_back(T& elem) {
+        end = circular_increment(end);
+        my_data[end] = elem;
 
+        if (end == start)
+            start = circular_increment(start);
+
+        return my_data[end];
     }
 
-    T& push_back() {
+    /**
+    * @brief Pop from front
+    * @author Spencer Banasik
+    * @details Pops an element from the front of the queue,
+    * moving the queue start forward by one. Will not remove
+    * the element if length is one.
+    * @returns A copy of the popped element.
+    */
+    T pop_front() {
+        if (length() == 1)
+            return my_data[start];
 
+        T& returned_var = my_data[start];
+        start = circular_increment(start);
+
+        return returned_var;
     }
 
-    T& pop_front() {
+    /**
+    * @brief Pop from back
+    * @author Spencer Banasik
+    * @details Pops an element from the back of the queue,
+    * moving the queue end backward by one. Will not remove
+    * the element if length is one.
+    * @returns A copy of the popped element.
+    */
+    T pop_back() {
+        if (length() == 1)
+            return my_data[start];
 
-    }
+        T& returned_var = my_data[end];
+        end = circular_decrement(end);
 
-    T& pop_back() {
-
+        return returned_var;
     }
 
     /**
     * @brief Data
     * @author Spencer Banasik
-    * @returns A pointer to our data
+    * @returns A pointer to our data.
     */
     T* data() {
         return &my_data;
@@ -113,8 +181,8 @@ private:
     /**
     * @brief Circular Inrecment
     * @author Spencer Banasik
-    * @param [in] Start or end variable
-    * @returns The start or end variable, incremented by one according to the circular queue
+    * @param [in] Start or end variable.
+    * @returns The start or end variable, incremented by one according to the circular queue.
     * @private
     */
     size_t circular_increment(const size_t edge) {
