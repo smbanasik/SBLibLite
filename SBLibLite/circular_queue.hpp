@@ -30,7 +30,7 @@ public:
     * @author Spencer Banasik
     * @details To satisfy the invariant there must always be one 
     * element in the queue. This ensures that.
-    * @param [in] initial - The initial value for the queue.
+    * @param [in] initial The initial value for the queue.
     */
     CircularQueue(T& initial) {
         my_data[start] = initial;
@@ -62,7 +62,7 @@ public:
     * and R be return value.
     * (C + S + I) % C = R
     * (8 + 2 + 4) % 8 = 6
-    * @param [in] idx - The index.
+    * @param [in] idx The index.
     * @returns A reference to the element at that index.
     */
     T& at(size_t idx) {
@@ -73,8 +73,8 @@ public:
     * @brief Set
     * @author Spencer Banasik
     * @details Arbitrarily set an element of the queue
-    * @param [in] elem - The element set
-    * @param [in] idx - The index of the element to be set
+    * @param [in] elem The element set
+    * @param [in] idx  The index of the element to be set
     * @returns Void
     */
     void set(T& elem, size_t idx) {
@@ -88,7 +88,7 @@ public:
     * and R be return value.
     * (C + S + I) % C = R
     * (8 + 2 + 4) % 8 = 6
-    * @param [in] idx - The index.
+    * @param [in] idx The index.
     * @returns A reference to the element at that index.
     */
     T& operator[](size_t idx){
@@ -117,7 +117,7 @@ public:
     * @details Pushes an element to the front of the queue,
     * moving the queue start back by one. Overwrites an element
     * if one was where the pushed element will be.
-    * @param [in] elem - The element to be pushed.
+    * @param [in] elem The element to be pushed.
     * @returns A reference to the pushed element.
     */
     T& push_front(T& elem) {
@@ -136,7 +136,7 @@ public:
     * @details Pushes an element to the back of the queue,
     * moving the queue end forward by one. Overwrites an element
     * if one was where the pushed element will be.
-    * @param [in] elem - The element to be pushed.
+    * @param [in] elem The element to be pushed.
     * @returns A reference to the pushed element.
     */
     T& push_back(T& elem) {
