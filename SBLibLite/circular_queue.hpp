@@ -11,13 +11,29 @@ namespace cont {
 * with both pointing to real elements. This means that the queue must always
 * have one element to start.
 * 
+* An alternative is to have the end point to one-after the real end, like with
+* ever other standard container, allowing for iterators. However, the circular 
+* queue will then need to have some way of determining whether it is full or 
+* empty, and to be compatible with STL iterators, that method requires an 
+* empty buffer of space.
+* 
 * @invariant There will always be at least one element in the queue
 */
 template<typename T, size_t S>
 class CircularQueue {
 public:
 
-    // TODO: constructor
+    /**
+    * @brief Parameterized Constructor
+    * @author Spencer Banasik
+    * @details To satisfy the invariant there must always be one 
+    * element in the queue. This ensures that.
+    * @param [in] initial - The initial value for the queue.
+    */
+    CircularQueue(T& initial) {
+        my_data[start] = initial;
+    }
+
 
     /**
     * @brief Back
