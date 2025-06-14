@@ -1,4 +1,6 @@
-#include <stdint.h>
+// Spencer Banasik
+#ifndef SB_CIRCULAR_QUEUE_HPP
+#define SB_CIRCULAR_QUEUE_HPP
 namespace sb {
 namespace cont {
 
@@ -223,3 +225,4 @@ private:
 
 }
 }
+#endif
