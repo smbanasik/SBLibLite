@@ -13,3 +13,5 @@ Download the header files that you wish to use and `#include` them in your proje
 - An array linked list hybrid (a linked list of arrays that are X elements long)
 - A small vector optimization implementation (first X elements are on the stack)
 - Pool datatype (contiguous storage that doesn't invalidate references)
+- Lazy pointers? (deep copy only when data is modified)
+  - Would have to keep track of which pointers rely on which data being modified
