@@ -63,6 +63,8 @@ private:
 * is in that node, we can use that immediately. We could also use it as a starting point 
 * if we consider a common use case to be iterating though the elements.
 * We could doubly link the nodes to allow for reverse iteration
+* 
+* Further functionality could be added to allow for arbitrary node pushing and popping.
 */
 template <typename T, size_t S>
 class ArrayList {
@@ -125,12 +127,30 @@ public:
         return num_nodes;
     }
 
-    // TODO: we should follow the set 
-    // of std::array functions,
-    // since this more closely resembles 
-    // that.
-    // push/pop_front/back only work
-    // at a node level, really.
+    ArrayListNode<T, S>* node_push_front() {
+        allocate_front(initial);
+        return initial;
+    }
+
+    ArrayListNode<T, S>* node_pop_front() {
+        ArrayListNode<T, S>* popped = initial;
+        initial = initial->next();
+        return popped;
+    }
+
+    ArrayListNode<T, S>* node_push_back() {
+        allocate_back(last);
+    }
+
+    ArrayListNode<T, S>* node_pop_back() {
+        ArrayListNode<T, S>* popped = last;
+        last = initial;
+        for (size_t i = 0; i < num_nodes - 1; i++) {
+            last = last->next();
+        }
+        last->set_next(nullptr);
+        return popped;
+    }
 
 
     ArrayListNode<T, S>* front() {
@@ -143,10 +163,29 @@ public:
 
 private:
 
-    void reallocate() {
-        ArrayListNode<T, S>* prior = last;
-        last = new ArrayListNode<T, S>();
-        prior->set_next(last);
+    /**
+    * @brief Allocate a new node in front of the input node
+    * @author Spencer Banasik
+    * @details A new node is allocated, and the input node has its next set to
+    * the new node.
+    * @param [in] prev The node which will recieve a new node in front of it
+    */
+    void allocate_back(ArrayListNode<T, S>* prev) {
+        ArrayListNode<T, S>* prior = prev;
+        prev = new ArrayListNode<T, S>();
+        prior->set_next(prev);
+    }
+
+    /**
+    * @brief Allocate a new node behind the input node
+    * @author Spencer Banasik
+    * @details A new node is allocated, and has its next set to the input node. Finally, the next_node is set to the new node.
+    * @param [in, out] next_node The node which will be in front of the new node, which is then mutated to be the new node.
+    */
+    void allocate_front(ArrayListNode<T, S>* next_node) {
+        ArrayListNode<T, S>* prev = new ArrayListNode<T, S>();
+        prev->set_next(next_node);
+        next_node = prev;
     }
 
     ArrayListNode<T, S>* initial = nullptr;
